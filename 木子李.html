@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鑫鑫念念</title>
+</head>
+<style>
+    .wrappemployee{
+  width:100%;
+  text-align: center;
+  margin: 0 auto;
+}
+input{
+    border-width: 1px;
+    border-radius: 6px;
+    outline: none;
+    appearance: none;
+    text-indent: 4px;
+    color: #ccc;
+}
+input.err{
+    border: 1px solid red;
+}
+.btn{
+    width: 72px;
+    color: #ffffff;
+    background: #f66;
+    outline: none;
+    appearance: none;
+    border-radius: 6px;
+}
+p.message{
+    text-align: center;
+    letter-spacing: 4px;
+}
+.bottom{
+    text-align: right;
+}
+</style>
+
+<body>
+    <script src="https://cdn.bootcss.com/vue/2.5.17/vue.min.js"></script>
+    <div id='app'>
+        <div v-if="!flag" class="wrappemployee" :style="wrappelStyle">
+            <div class="employee">
+                <div class="employeeright">
+                    <label :style="employeeStyle">专属密码:</label>
+                    <input @input="islixin = false" :style="inuputStyle" :class="{'err': islixin}" class="form-controls"
+                        v-model="password" type="password" placeholder="专属密码" autocomplete="off">
+                    <button class="btn" @click="btn()">登录</button>
+                </div>
+            </div>
+        </div>
+        <div v-if="flag">
+            <svg :width='width' :height='height' @mousemove='listener($event)'>
+                <a @click="showMsg = true" v-for='tag in tags'>
+                    <text :x='tag.x' :y='tag.y' :font-size='15 * (600/(600-tag.z))' :fill-opacity='((400+tag.z)/600)'>{{tag.text}}</text>
+                </a>
+            </svg>
+            <p v-if="showMsg" class="message">
+                {{mssage}}
+            </p>
+            <div class="bottom">
+                <button class="btn" @click="Exit()">Exit</button>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
+<script type="text/javascript">
+    const ua = navigator.userAgent;
+
+    const isAndroid = /(Android);?[\s/]+([\d.]+)?/.test(ua);
+    const isIpad = /(iPad).*OS\s([\d_]+)/.test(ua);
+    const isIphone = !isIpad && /(iPhone\sOS)\s([\d_]+)/.test(ua);
+    const isIpod = /(iPod)(.*OS\s([\d_]+))?/.test(ua);
+    const isMobile = isAndroid || isIpad || isIpod || isIphone;
+
+    const isWechat = /micromessenger/i.test(ua);
+    const isAlipay = /alipayclient/i.test(ua);
+
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+
+    const defaultWidth = 320;
+    const defaultHeight = 568;
+    const clientWidth = document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth;
+    const clientHeight = document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight;
+
+    const widthRatio = clientWidth > defaultWidth ? 1 + (clientWidth - defaultWidth) / defaultWidth : 1;
+    const heightRatio = clientHeight > defaultHeight ? 1 + (clientHeight - defaultHeight) / defaultHeight : 1;
+    const minRatio = widthRatio > heightRatio ? heightRatio : widthRatio;
+    new Vue({
+        el: "#app",
+        data: {
+            width: 350, //svg宽度
+            height: 500, //svg高度
+            tagsNum: 10, //标签数量
+            RADIUS: 150, //球的半径
+            speedX: Math.PI / 360, //球一帧绕x轴旋转的角度
+            speedY: Math.PI / 360, //球-帧绕y轴旋转的角度
+            tags: [],
+            password: '',
+            islixin: false,
+            initPwd: "19970105",
+            flag: false,
+            showMsg: false,
+            mssage: '心似双丝网,中有千千结。'
+        },
+        created() {
+            //初始化标签位置
+            let tags = [];
+            for (let i = 0; i < this.tagsNum; i++) {
+                let tag = {};
+                let k = -1 + (2 * (i + 1) - 1) / this.tagsNum;
+                let a = Math.acos(k);
+                //   var txt = '爱'
+                //   for(var idx in txt){
+                //     tag.text = txt[idx]
+                //   }
+                let b = a * Math.sqrt(this.tagsNum * Math.PI);
+                //   tag.text = i + "tag";
+                tag.text = 'Love❤️You❤';
+                tag.x = this.CX + this.RADIUS * Math.sin(a) * Math.cos(b);
+                tag.y = this.CY + this.RADIUS * Math.sin(a) * Math.sin(b);
+                tag.z = this.RADIUS * Math.cos(a);
+                // tag.href = "https://imgss.github.io";
+                tags.push(tag);
+            }
+            this.tags = tags;
+        },
+        mounted() {
+            //使球开始旋转
+            setInterval(() => {
+                this.rotateX(this.speedX);
+                this.rotateY(this.speedY);
+            }, 17);
+        },
+        computed: {
+            CX() {
+                return this.width / 2;
+            },
+            CY() {
+                return this.height / 2;
+            },
+            employeeStyle() {
+                const mR = minRatio;
+                var _employeeStyle = "font-size: " + 12 * mR + "px;";
+                _employeeStyle += "color: " + "#7b7c80;";
+                _employeeStyle += "letter-spacing:" + "2px";
+                return _employeeStyle;
+            },
+            inuputStyle() {
+                const mR = minRatio;
+                var _inuputStyle = "font-size: " + 14 * mR + "px;";
+                _inuputStyle += "paddingTop: " + 4 * mR + "px;";
+                _inuputStyle += "paddingBottom: " + 4 * mR + "px;";
+                return _inuputStyle;
+            },
+            wrappelStyle() {
+                const dH = defaultHeight;
+                const hR = heightRatio;
+                var _wrappelStyle = "marginTop: " + dH * 0.4 * hR + "px;";
+                _wrappelStyle += "marginBottom: " + dH * 0.4 * hR + "px;";
+                return _wrappelStyle;
+            },
+
+        },
+        methods: {
+            rotateX(angleX) {
+                var cos = Math.cos(angleX);
+                var sin = Math.sin(angleX);
+                for (let tag of this.tags) {
+                    var y1 = (tag.y - this.CY) * cos - tag.z * sin + this.CY;
+                    var z1 = tag.z * cos + (tag.y - this.CY) * sin;
+                    tag.y = y1;
+                    tag.z = z1;
+                }
+            },
+            rotateY(angleY) {
+                var cos = Math.cos(angleY);
+                var sin = Math.sin(angleY);
+                for (let tag of this.tags) {
+                    var x1 = (tag.x - this.CX) * cos - tag.z * sin + this.CX;
+                    var z1 = tag.z * cos + (tag.x - this.CX) * sin;
+                    tag.x = x1;
+                    tag.z = z1;
+                }
+            },
+            listener(event) {
+                //响应鼠标移动
+                var x = event.clientX - this.CX;
+                var y = event.clientY - this.CY;
+                this.speedX =
+                    x * 0.0001 > 0
+                        ? Math.min(this.RADIUS * 0.00002, x * 0.0001)
+                        : Math.max(-this.RADIUS * 0.00002, x * 0.0001);
+                this.speedY =
+                    y * 0.0001 > 0
+                        ? Math.min(this.RADIUS * 0.00002, y * 0.0001)
+                        : Math.max(-this.RADIUS * 0.00002, y * 0.0001);
+            },
+            btn() {
+                if (this.password === this.initPwd) {
+                    this.flag = true
+                } else {
+                    this.islixin = true
+                    alert('不是李鑫请不要登、感谢配合！！！')
+                    this.password = ''
+                }
+            },
+            Exit() {
+                this.flag = false
+            }
+        }
+    })
+</script>
