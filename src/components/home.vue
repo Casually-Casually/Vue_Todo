@@ -37,10 +37,6 @@ export default {
       let tag = {};
       let k = -1 + (2 * (i + 1) - 1) / this.tagsNum;
       let a = Math.acos(k);
-      //   var txt = '爱'
-      //   for(var idx in txt){
-      //     tag.text = txt[idx]
-      //   }
       let b = a * Math.sqrt(this.tagsNum * Math.PI);
       tag.text = i + "tag";
       //   tag.text = 'Love❤️You❤';
